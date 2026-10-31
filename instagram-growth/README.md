@@ -40,8 +40,13 @@ flask --app app create-admin
 ```
 Enter a username and a password (8+ characters). Running it again for the same username resets that password.
 
+## 8. Deploy to Render
+The repository includes `render.yaml` for 1-click deployment on [Render](https://render.com) with PostgreSQL and Gunicorn.
+See [DEPLOY_TO_RENDER.md](../DEPLOY_TO_RENDER.md) for full instructions.
+
 ## Production notes
 Serve with gunicorn/waitress behind HTTPS, keep `.env` out of version control, and add rate limiting
 (e.g. Flask-Limiter with Redis) - the built-in login throttle is per-process only. Add a payment gateway
 (e.g. Razorpay) if you want automatic payment verification; today "Paid" is set manually by an admin.
 Review Instagram's/Meta's Terms of Use for how growth services may be offered.
+

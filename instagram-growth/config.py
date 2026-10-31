@@ -6,15 +6,24 @@ load_dotenv()
 
 
 def _db_uri():
-    override = os.getenv("DATABASE_URL")  # optional full URI override (e.g. for tests)
+    override = os.getenv("DATABASE_URL")  # Render Postgres, Heroku, or manual DB URL
     if override:
+        if override.startswith("postgres://"):
+            override = override.replace("postgres://", "postgresql://", 1)
+        elif override.startswith("mysql://") and not override.startswith("mysql+pymysql://"):
+            override = override.replace("mysql://", "mysql+pymysql://", 1)
         return override
-    user = quote_plus(os.getenv("DB_USER", "root"))
-    pwd = quote_plus(os.getenv("DB_PASSWORD", ""))
-    host = os.getenv("DB_HOST", "localhost")
-    port = os.getenv("DB_PORT", "3306")
-    name = os.getenv("DB_NAME", "instagram_growth_db")
-    return f"mysql+pymysql://{user}:{pwd}@{host}:{port}/{name}?charset=utf8mb4"
+
+    host = os.getenv("DB_HOST")
+    if host:
+        user = quote_plus(os.getenv("DB_USER", "root"))
+        pwd = quote_plus(os.getenv("DB_PASSWORD", ""))
+        port = os.getenv("DB_PORT", "3306")
+        name = os.getenv("DB_NAME", "instagram_growth_db")
+        return f"mysql+pymysql://{user}:{pwd}@{host}:{port}/{name}?charset=utf8mb4"
+
+    return "sqlite:///instagram_growth.db"
+
 
 
 class Config:

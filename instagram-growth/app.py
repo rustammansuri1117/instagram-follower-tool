@@ -1,3 +1,4 @@
+import os
 import click
 from flask import Flask, render_template
 from flask_wtf.csrf import CSRFError
@@ -20,6 +21,18 @@ def seed_plans():
     if Plan.query.count() == 0:
         for name, qty, price in DEFAULT_PLANS:
             db.session.add(Plan(plan_name=name, follower_quantity=qty, price=price))
+        db.session.commit()
+
+
+def seed_admin_from_env():
+    admin_user = (os.getenv("ADMIN_USERNAME") or "").strip()
+    admin_pass = os.getenv("ADMIN_PASSWORD") or ""
+    if admin_user and len(admin_pass) >= 8:
+        admin = Admin.query.filter_by(username=admin_user).first()
+        if admin is None:
+            admin = Admin(username=admin_user)
+            db.session.add(admin)
+        admin.set_password(admin_pass)
         db.session.commit()
 
 
@@ -125,8 +138,9 @@ def create_app(config_class=Config):
         try:
             db.create_all()
             seed_plans()
+            seed_admin_from_env()
         except SQLAlchemyError as exc:
-            app.logger.error("Database not ready - check MySQL and your .env file: %s", exc)
+            app.logger.error("Database not ready - check database settings and your .env file: %s", exc)
 
     return app
 
@@ -134,4 +148,5 @@ def create_app(config_class=Config):
 app = create_app()
 
 if __name__ == "__main__":
-    app.run(debug=app.config["DEBUG"])
+    port = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=app.config["DEBUG"])
