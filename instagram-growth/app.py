@@ -5,9 +5,12 @@ from flask_wtf.csrf import CSRFError
 from datetime import timedelta
 from sqlalchemy.exc import SQLAlchemyError
 
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 from config import Config
 from extensions import csrf, db, login_manager
 from models import Admin, Plan
+
 
 DEFAULT_PLANS = [
     ("500 Followers", 500, 99),
@@ -106,8 +109,10 @@ def register_cli(app):
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
     db.init_app(app)
+
     csrf.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = "admin.login"
