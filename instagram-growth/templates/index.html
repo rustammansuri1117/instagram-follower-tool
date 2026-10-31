@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block hero %}
+<header class="hero">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div class="container position-relative text-center text-white">
+    <h1 class="display-3 fw-extrabold hero-title">Grow Your Instagram Presence</h1>
+    <p class="lead mx-auto hero-sub">Pick a follower plan, share your username, and track your order from start to finish. No password, no risky logins.</p>
+    <div class="d-flex flex-wrap gap-3 justify-content-center mt-4">
+      <a href="#plans" class="btn btn-light btn-lg rounded-pill px-5 fw-semibold hero-btn">Get Started</a>
+      <a href="{{ url_for('main.track_order') }}" class="btn btn-outline-light btn-lg rounded-pill px-4">Track Order</a>
+    </div>
+  </div>
+</header>
+{% endblock %}
+{% block main_class %}{% endblock %}
+{% block content %}
+<section id="plans" class="section">
+  <div class="container">
+    <h2 class="section-title text-center">Follower growth plans</h2>
+    <p class="text-center text-muted mb-5">One-time prices. Choose a plan to place your order.</p>
+    {% include "_plans.html" %}
+  </div>
+</section>
+
+<section id="how-it-works" class="section bg-soft">
+  <div class="container">
+    <h2 class="section-title text-center mb-5">How it works</h2>
+    <div class="row g-4">
+      {% for icon, title, text in [
+        ('bi-hand-index-thumb', 'Choose a plan', 'Pick the follower amount that fits your goals.'),
+        ('bi-person-badge', 'Enter your details', 'Share your public Instagram username and mobile number. Never your password.'),
+        ('bi-hourglass-split', 'We process your order', 'Your order starts as Pending and moves forward as our team works on it.'),
+        ('bi-patch-check', 'Track to completion', 'Use your order ID and mobile number to check status. Completed is shown only after verification.') ] %}
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="step-card h-100">
+          <div class="step-icon"><i class="bi {{ icon }}"></i></div>
+          <h3 class="h6 fw-bold">{{ title }}</h3>
+          <p class="small text-muted mb-0">{{ text }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="section">
+  <div class="container" style="max-width: 800px;">
+    <h2 class="section-title text-center mb-5">Frequently asked questions</h2>
+    <div class="accordion ig-accordion" id="faqList">
+      {% for q, a in [
+        ('Do you need my Instagram password?', 'No. We never ask for or store your password. We only need your public username and a mobile number to contact you about your order.'),
+        ('How long does an order take?', 'Orders begin as Pending. Delivery time depends on order size and workload, and your status updates as the order progresses.'),
+        ('When is my order marked Completed?', 'Only after the followers have actually been delivered and checked by our team.'),
+        ('Can I guarantee followers will stay?', 'No. Follower counts can change over time, so we do not promise permanent retention.'),
+        ('How do I check my order?', 'Open Track Order and enter your order ID and the mobile number you used.') ] %}
+      <div class="accordion-item">
+        <h3 class="accordion-header"><button class="accordion-button {% if not loop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ loop.index }}">{{ q }}</button></h3>
+        <div id="faq{{ loop.index }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}" data-bs-parent="#faqList"><div class="accordion-body text-muted">{{ a }}</div></div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="section bg-soft">
+  <div class="container text-center">
+    <h2 class="section-title mb-3">Contact us</h2>
+    <p class="text-muted">Questions about an order? Reach out and include your order ID.</p>
+    <p class="mb-1"><i class="bi bi-envelope me-2"></i>{{ contact_email }}</p>
+    <p><i class="bi bi-telephone me-2"></i>{{ contact_phone }}</p>
+  </div>
+</section>
+{% endblock %}

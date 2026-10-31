@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Track Order | Instagram Growth{% endblock %}
+{% block content %}
+<section class="section pt-2">
+  <div class="container" style="max-width: 560px;">
+    <div class="form-card">
+      <h1 class="h3 fw-bold mb-4">Track your order</h1>
+      <form method="post" action="{{ url_for('main.track_order') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="mb-3"><label for="order_id" class="form-label fw-semibold">Order ID</label>
+          <input type="text" class="form-control" id="order_id" name="order_id" inputmode="numeric" required></div>
+        <div class="mb-4"><label for="mobile_number" class="form-label fw-semibold">Mobile number used for the order</label>
+          <input type="tel" class="form-control" id="mobile_number" name="mobile_number" required></div>
+        <button class="btn btn-gradient w-100" type="submit">Check status</button>
+      </form>
+      {% if order %}
+      <hr class="my-4">
+      <dl class="detail-list">
+        <div><dt>Order ID</dt><dd>#{{ order.id }}</dd></div>
+        <div><dt>Instagram username</dt><dd>@{{ order.user.instagram_username }}</dd></div>
+        <div><dt>Plan</dt><dd>{{ order.plan.plan_name }}</dd></div>
+        <div><dt>Status</dt><dd><span class="badge text-bg-{{ order.order_status|status_class }}">{{ order.order_status }}</span></dd></div>
+        <div><dt>Last updated</dt><dd>{{ order.updated_at|dt }}</dd></div>
+      </dl>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

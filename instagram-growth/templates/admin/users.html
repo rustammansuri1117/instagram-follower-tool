@@ -1,0 +1,21 @@
+{% extends "admin/base.html" %}
+{% block title %}Users{% endblock %}
+{% block content %}
+<h1 class="h3 fw-bold mb-4">Users</h1>
+<form class="row g-2 mb-3" method="get">
+  <div class="col-8 col-md-5"><input class="form-control" name="q" value="{{ q }}" placeholder="Search username or mobile"></div>
+  <div class="col-4 col-md-auto"><button class="btn btn-gradient w-100">Search</button></div>
+</form>
+<div class="card border-0 shadow-sm"><div class="table-responsive">
+  <table class="table table-hover align-middle mb-0">
+    <thead><tr><th>ID</th><th>Instagram username</th><th>Mobile</th><th>Orders</th><th>Joined</th></tr></thead>
+    <tbody>
+    {% for user, n in rows %}
+      <tr><td>{{ user.id }}</td><td>@{{ user.instagram_username }}</td><td>{{ user.mobile_number }}</td><td>{{ n }}</td><td class="small text-muted">{{ user.created_at|dt }}</td></tr>
+    {% else %}
+      <tr><td colspan="5" class="text-center text-muted py-4">No users found.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div></div>
+{% endblock %}

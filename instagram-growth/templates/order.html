@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Order {{ plan.plan_name }} | Instagram Growth{% endblock %}
+{% block content %}
+<section class="section pt-2">
+  <div class="container" style="max-width: 560px;">
+    <div class="form-card">
+      <h1 class="h3 fw-bold mb-1">Place your order</h1>
+      <p class="text-muted small mb-4">We never ask for your Instagram password.</p>
+      <form method="post" action="{{ url_for('user.submit_order') }}" class="needs-validation" id="orderForm" novalidate>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="plan_id" value="{{ plan.id }}">
+        <div class="mb-3">
+          <label for="instagram_username" class="form-label fw-semibold">Instagram username</label>
+          <div class="input-group has-validation">
+            <span class="input-group-text">@</span>
+            <input type="text" class="form-control" id="instagram_username" name="instagram_username" maxlength="31"
+                   value="{{ form.get('instagram_username', '') }}" required autocomplete="off" autocapitalize="none">
+            <div class="invalid-feedback">Use letters, numbers, periods or underscores (max 30).</div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="mobile_number" class="form-label fw-semibold">Mobile number</label>
+          <input type="tel" class="form-control" id="mobile_number" name="mobile_number" maxlength="16" placeholder="10-digit number"
+                 value="{{ form.get('mobile_number', '') }}" required>
+          <div class="invalid-feedback">Enter a valid 10-digit Indian mobile number.</div>
+        </div>
+        <div class="row g-3 mb-4">
+          <div class="col-7"><label class="form-label fw-semibold">Selected plan</label>
+            <input type="text" class="form-control" value="{{ plan.plan_name }}" readonly></div>
+          <div class="col-5"><label class="form-label fw-semibold">Price</label>
+            <input type="text" class="form-control" value="{{ plan.price|inr }}" readonly></div>
+        </div>
+        <button type="submit" class="btn btn-gradient w-100 btn-lg">Submit order</button>
+        <a href="{{ url_for('main.plans') }}" class="d-block text-center mt-3 small">Choose a different plan</a>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

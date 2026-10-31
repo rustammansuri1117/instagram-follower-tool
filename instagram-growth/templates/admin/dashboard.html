@@ -1,0 +1,37 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1 class="h3 fw-bold mb-4">Dashboard</h1>
+<div class="row g-3 mb-4">
+  {% for label, value, icon in [
+    ('Total users', stats.users, 'bi-people'),
+    ('Total orders', stats.orders, 'bi-receipt'),
+    ('Pending orders', stats.pending, 'bi-hourglass-split'),
+    ('Completed orders', stats.completed, 'bi-check2-circle'),
+    ('Revenue (verified paid)', stats.revenue|inr, 'bi-currency-rupee') ] %}
+  <div class="col-6 col-xl">
+    <div class="stat-card"><i class="bi {{ icon }}"></i><div class="stat-value">{{ value }}</div><div class="stat-label">{{ label }}</div></div>
+  </div>
+  {% endfor %}
+</div>
+<div class="card border-0 shadow-sm">
+  <div class="card-header bg-white d-flex justify-content-between align-items-center">
+    <strong>Recent orders</strong><a href="{{ url_for('admin.orders') }}" class="small">View all</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead><tr><th>ID</th><th>Username</th><th>Mobile</th><th>Plan</th><th>Status</th><th>Payment</th><th>Date</th></tr></thead>
+      <tbody>
+      {% for o in recent %}
+        <tr><td>#{{ o.id }}</td><td>@{{ o.user.instagram_username }}</td><td>{{ o.user.mobile_number }}</td><td>{{ o.plan.plan_name }}</td>
+          <td><span class="badge text-bg-{{ o.order_status|status_class }}">{{ o.order_status }}</span></td>
+          <td><span class="badge text-bg-{{ o.payment_status|status_class }}">{{ o.payment_status }}</span></td>
+          <td class="small text-muted">{{ o.created_at|dt }}</td></tr>
+      {% else %}
+        <tr><td colspan="7" class="text-center text-muted py-4">No orders yet. New orders will appear here.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
